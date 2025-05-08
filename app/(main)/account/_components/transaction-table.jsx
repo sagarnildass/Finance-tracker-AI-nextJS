@@ -276,10 +276,10 @@ export function TransactionTable({ transactions }) {
       </div>
 
       {/* Transactions Table */}
-      <div className="rounded-md border">
+      <div className="rounded-md border border-gray-400">
         <Table>
           <TableHeader>
-            <TableRow>
+            <TableRow className="border-gray-400">
               <TableHead className="w-[50px]">
                 <Checkbox
                   checked={
@@ -287,6 +287,7 @@ export function TransactionTable({ transactions }) {
                     paginatedTransactions.length > 0
                   }
                   onCheckedChange={handleSelectAll}
+                  className="border-gray-400"
                 />
               </TableHead>
               <TableHead
@@ -338,7 +339,7 @@ export function TransactionTable({ transactions }) {
           </TableHeader>
           <TableBody>
             {paginatedTransactions.length === 0 ? (
-              <TableRow>
+              <TableRow className="border-gray-400">
                 <TableCell
                   colSpan={7}
                   className="text-center text-muted-foreground"
@@ -348,11 +349,12 @@ export function TransactionTable({ transactions }) {
               </TableRow>
             ) : (
               paginatedTransactions.map((transaction) => (
-                <TableRow key={transaction.id}>
+                <TableRow key={transaction.id} className="border-gray-400">
                   <TableCell>
                     <Checkbox
                       checked={selectedIds.includes(transaction.id)}
                       onCheckedChange={() => handleSelect(transaction.id)}
+                      className="border-gray-400"
                     />
                   </TableCell>
                   <TableCell>
