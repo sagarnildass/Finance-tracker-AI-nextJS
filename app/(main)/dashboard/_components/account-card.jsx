@@ -60,6 +60,7 @@ export function AccountCard({ account }) {
             checked={isDefault}
             onClick={handleDefaultChange}
             disabled={updateDefaultLoading}
+            className="data-[state=unchecked]:bg-gray-400 data-[state=checked]:bg-blue-500"
           />
         </CardHeader>
         <CardContent>

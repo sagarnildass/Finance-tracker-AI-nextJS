@@ -157,7 +157,7 @@ export function CreateAccountDrawer({ children }) {
                 id="isDefault"
                 checked={watch('isDefault')}
                 onCheckedChange={(checked) => setValue('isDefault', checked)}
-                className="border border-gray-400 bg-blue-600 data-[state=checked]:bg-blue-600"
+                className="data-[state=unchecked]:bg-gray-400 data-[state=checked]:bg-blue-500"
               />
             </div>
 

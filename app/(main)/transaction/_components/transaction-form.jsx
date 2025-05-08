@@ -275,6 +275,7 @@ export function AddTransactionForm({
         <Switch
           checked={isRecurring}
           onCheckedChange={(checked) => setValue("isRecurring", checked)}
+          className="data-[state=unchecked]:bg-gray-400 data-[state=checked]:bg-blue-500"
         />
       </div>
 
