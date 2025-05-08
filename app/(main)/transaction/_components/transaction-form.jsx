@@ -1,35 +1,35 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { CalendarIcon, Loader2 } from "lucide-react";
-import { format } from "date-fns";
-import { useRouter, useSearchParams } from "next/navigation";
-import useFetch from "@/hooks/use-fetch";
-import { toast } from "sonner";
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { CalendarIcon, Loader2 } from 'lucide-react';
+import { format } from 'date-fns';
+import { useRouter, useSearchParams } from 'next/navigation';
+import useFetch from '@/hooks/use-fetch';
+import { toast } from 'sonner';
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { CreateAccountDrawer } from "@/components/create-account-drawer";
-import { cn } from "@/lib/utils";
-import { createTransaction, updateTransaction } from "@/actions/transaction";
-import { transactionSchema } from "@/app/lib/schema";
-import { ReceiptScanner } from "./recipt-scanner";
+} from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
+import { CreateAccountDrawer } from '@/components/create-account-drawer';
+import { cn } from '@/lib/utils';
+import { createTransaction, updateTransaction } from '@/actions/transaction';
+import { transactionSchema } from '@/app/lib/schema';
+import { ReceiptScanner } from './recipt-scanner';
 
 export function AddTransactionForm({
   accounts,
@@ -39,7 +39,7 @@ export function AddTransactionForm({
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const editId = searchParams.get("edit");
+  const editId = searchParams.get('edit');
 
   const {
     register,
@@ -66,9 +66,9 @@ export function AddTransactionForm({
             }),
           }
         : {
-            type: "EXPENSE",
-            amount: "",
-            description: "",
+            type: 'EXPENSE',
+            amount: '',
+            description: '',
             accountId: accounts.find((ac) => ac.isDefault)?.id,
             date: new Date(),
             isRecurring: false,
@@ -96,15 +96,15 @@ export function AddTransactionForm({
 
   const handleScanComplete = (scannedData) => {
     if (scannedData) {
-      setValue("amount", scannedData.amount.toString());
-      setValue("date", new Date(scannedData.date));
+      setValue('amount', scannedData.amount.toString());
+      setValue('date', new Date(scannedData.date));
       if (scannedData.description) {
-        setValue("description", scannedData.description);
+        setValue('description', scannedData.description);
       }
       if (scannedData.category) {
-        setValue("category", scannedData.category);
+        setValue('category', scannedData.category);
       }
-      toast.success("Receipt scanned successfully");
+      toast.success('Receipt scanned successfully');
     }
   };
 
@@ -112,17 +112,17 @@ export function AddTransactionForm({
     if (transactionResult?.success && !transactionLoading) {
       toast.success(
         editMode
-          ? "Transaction updated successfully"
-          : "Transaction created successfully"
+          ? 'Transaction updated successfully'
+          : 'Transaction created successfully'
       );
       reset();
       router.push(`/account/${transactionResult.data.accountId}`);
     }
   }, [transactionResult, transactionLoading, editMode]);
 
-  const type = watch("type");
-  const isRecurring = watch("isRecurring");
-  const date = watch("date");
+  const type = watch('type');
+  const isRecurring = watch('isRecurring');
+  const date = watch('date');
 
   const filteredCategories = categories.filter(
     (category) => category.type === type
@@ -137,7 +137,7 @@ export function AddTransactionForm({
       <div className="space-y-2">
         <label className="text-sm font-medium">Type</label>
         <Select
-          onValueChange={(value) => setValue("type", value)}
+          onValueChange={(value) => setValue('type', value)}
           defaultValue={type}
         >
           <SelectTrigger>
@@ -161,7 +161,7 @@ export function AddTransactionForm({
             type="number"
             step="0.01"
             placeholder="0.00"
-            {...register("amount")}
+            {...register('amount')}
           />
           {errors.amount && (
             <p className="text-sm text-red-500">{errors.amount.message}</p>
@@ -171,8 +171,8 @@ export function AddTransactionForm({
         <div className="space-y-2">
           <label className="text-sm font-medium">Account</label>
           <Select
-            onValueChange={(value) => setValue("accountId", value)}
-            defaultValue={getValues("accountId")}
+            onValueChange={(value) => setValue('accountId', value)}
+            defaultValue={getValues('accountId')}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select account" />
@@ -186,7 +186,7 @@ export function AddTransactionForm({
               <CreateAccountDrawer>
                 <Button
                   variant="ghost"
-                  className="relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground"
+                  className="hover:bg-accent hover:text-accent-foreground relative flex w-full cursor-default items-center rounded-sm py-1.5 pr-2 pl-8 text-sm outline-none select-none"
                 >
                   Create Account
                 </Button>
@@ -203,8 +203,8 @@ export function AddTransactionForm({
       <div className="space-y-2">
         <label className="text-sm font-medium">Category</label>
         <Select
-          onValueChange={(value) => setValue("category", value)}
-          defaultValue={getValues("category")}
+          value={watch('category')}
+          onValueChange={(value) => setValue('category', value)}
         >
           <SelectTrigger>
             <SelectValue placeholder="Select category" />
@@ -230,11 +230,11 @@ export function AddTransactionForm({
             <Button
               variant="outline"
               className={cn(
-                "w-full pl-3 text-left font-normal",
-                !date && "text-muted-foreground"
+                'w-full pl-3 text-left font-normal',
+                !date && 'text-muted-foreground'
               )}
             >
-              {date ? format(date, "PPP") : <span>Pick a date</span>}
+              {date ? format(date, 'PPP') : <span>Pick a date</span>}
               <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
             </Button>
           </PopoverTrigger>
@@ -242,9 +242,9 @@ export function AddTransactionForm({
             <Calendar
               mode="single"
               selected={date}
-              onSelect={(date) => setValue("date", date)}
+              onSelect={(date) => setValue('date', date)}
               disabled={(date) =>
-                date > new Date() || date < new Date("1900-01-01")
+                date > new Date() || date < new Date('1900-01-01')
               }
               initialFocus
             />
@@ -258,7 +258,7 @@ export function AddTransactionForm({
       {/* Description */}
       <div className="space-y-2">
         <label className="text-sm font-medium">Description</label>
-        <Input placeholder="Enter description" {...register("description")} />
+        <Input placeholder="Enter description" {...register('description')} />
         {errors.description && (
           <p className="text-sm text-red-500">{errors.description.message}</p>
         )}
@@ -268,14 +268,14 @@ export function AddTransactionForm({
       <div className="flex flex-row items-center justify-between rounded-lg border p-4">
         <div className="space-y-0.5">
           <label className="text-base font-medium">Recurring Transaction</label>
-          <div className="text-sm text-muted-foreground">
+          <div className="text-muted-foreground text-sm">
             Set up a recurring schedule for this transaction
           </div>
         </div>
         <Switch
           checked={isRecurring}
-          onCheckedChange={(checked) => setValue("isRecurring", checked)}
-          className="data-[state=unchecked]:bg-gray-400 data-[state=checked]:bg-blue-500"
+          onCheckedChange={(checked) => setValue('isRecurring', checked)}
+          className="data-[state=checked]:bg-blue-500 data-[state=unchecked]:bg-gray-400"
         />
       </div>
 
@@ -284,8 +284,8 @@ export function AddTransactionForm({
         <div className="space-y-2">
           <label className="text-sm font-medium">Recurring Interval</label>
           <Select
-            onValueChange={(value) => setValue("recurringInterval", value)}
-            defaultValue={getValues("recurringInterval")}
+            onValueChange={(value) => setValue('recurringInterval', value)}
+            defaultValue={getValues('recurringInterval')}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select interval" />
@@ -319,12 +319,12 @@ export function AddTransactionForm({
           {transactionLoading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              {editMode ? "Updating..." : "Creating..."}
+              {editMode ? 'Updating...' : 'Creating...'}
             </>
           ) : editMode ? (
-            "Update Transaction"
+            'Update Transaction'
           ) : (
-            "Create Transaction"
+            'Create Transaction'
           )}
         </Button>
       </div>
