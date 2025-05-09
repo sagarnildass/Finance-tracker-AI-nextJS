@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState, useMemo } from "react";
+import { useState, useMemo } from 'react';
 import {
   BarChart,
   Bar,
@@ -10,27 +10,27 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-} from "recharts";
-import { format, subDays, startOfDay, endOfDay } from "date-fns";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+} from 'recharts';
+import { format, subDays, startOfDay, endOfDay } from 'date-fns';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 
 const DATE_RANGES = {
-  "7D": { label: "Last 7 Days", days: 7 },
-  "1M": { label: "Last Month", days: 30 },
-  "3M": { label: "Last 3 Months", days: 90 },
-  "6M": { label: "Last 6 Months", days: 180 },
-  ALL: { label: "All Time", days: null },
+  '7D': { label: 'Last 7 Days', days: 7 },
+  '1M': { label: 'Last Month', days: 30 },
+  '3M': { label: 'Last 3 Months', days: 90 },
+  '6M': { label: 'Last 6 Months', days: 180 },
+  ALL: { label: 'All Time', days: null },
 };
 
 export function AccountChart({ transactions }) {
-  const [dateRange, setDateRange] = useState("1M");
+  const [dateRange, setDateRange] = useState('1M');
 
   const filteredData = useMemo(() => {
     const range = DATE_RANGES[dateRange];
@@ -46,11 +46,11 @@ export function AccountChart({ transactions }) {
 
     // Group transactions by date
     const grouped = filtered.reduce((acc, transaction) => {
-      const date = format(new Date(transaction.date), "MMM dd");
+      const date = format(new Date(transaction.date), 'MMM dd');
       if (!acc[date]) {
         acc[date] = { date, income: 0, expense: 0 };
       }
-      if (transaction.type === "INCOME") {
+      if (transaction.type === 'INCOME') {
         acc[date].income += transaction.amount;
       } else {
         acc[date].expense += transaction.amount;
@@ -95,17 +95,17 @@ export function AccountChart({ transactions }) {
         </Select>
       </CardHeader>
       <CardContent>
-        <div className="flex justify-around mb-6 text-sm">
+        <div className="mb-6 flex justify-around text-sm">
           <div className="text-center">
             <p className="text-muted-foreground">Total Income</p>
             <p className="text-lg font-bold text-green-500">
-              ${totals.income.toFixed(2)}
+              £{totals.income.toFixed(2)}
             </p>
           </div>
           <div className="text-center">
             <p className="text-muted-foreground">Total Expenses</p>
             <p className="text-lg font-bold text-red-500">
-              ${totals.expense.toFixed(2)}
+              £{totals.expense.toFixed(2)}
             </p>
           </div>
           <div className="text-center">
@@ -113,11 +113,11 @@ export function AccountChart({ transactions }) {
             <p
               className={`text-lg font-bold ${
                 totals.income - totals.expense >= 0
-                  ? "text-green-500"
-                  : "text-red-500"
+                  ? 'text-green-500'
+                  : 'text-red-500'
               }`}
             >
-              ${(totals.income - totals.expense).toFixed(2)}
+              £{(totals.income - totals.expense).toFixed(2)}
             </p>
           </div>
         </div>
@@ -138,14 +138,14 @@ export function AccountChart({ transactions }) {
                 fontSize={12}
                 tickLine={false}
                 axisLine={false}
-                tickFormatter={(value) => `$${value}`}
+                tickFormatter={(value) => `£${value}`}
               />
               <Tooltip
-                formatter={(value) => [`$${value}`, undefined]}
+                formatter={(value) => [`£${value}`, undefined]}
                 contentStyle={{
-                  backgroundColor: "hsl(var(--popover))",
-                  border: "1px solid hsl(var(--border))",
-                  borderRadius: "var(--radius)",
+                  backgroundColor: 'hsl(var(--popover))',
+                  border: '1px solid hsl(var(--border))',
+                  borderRadius: 'var(--radius)',
                 }}
               />
               <Legend />

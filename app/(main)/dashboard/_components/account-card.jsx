@@ -64,76 +64,83 @@ export function AccountCard({ account }) {
   }, [error]);
 
   return (
-    <Card className="group relative border-gray-400 transition-shadow hover:shadow-md">
-      <Link href={`/account/${id}`}>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium capitalize">
-            {name}
-          </CardTitle>
-          <div className="flex items-center gap-x-2">
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <button
-                  onClick={(e) => e.stopPropagation()}
-                  className="flex items-center justify-center h-8 w-8 rounded-full bg-white/80 shadow hover:bg-red-100 transition-colors border border-gray-200"
+    <Card
+      className="group relative border-gray-400 transition-shadow hover:shadow-md cursor-pointer"
+      onClick={() => router.push(`/account/${id}`)}
+    >
+      <div className="flex flex-row items-center justify-between space-y-0 pb-2 px-4 pt-4">
+        <CardTitle className="text-sm font-medium capitalize">
+          {name}
+        </CardTitle>
+        <div className="flex items-center gap-x-2">
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <button
+                onClick={(e) => e.stopPropagation()}
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-white/80 shadow transition-colors hover:bg-red-100"
+              >
+                <Trash2 className="h-5 w-5 text-red-600" />
+              </button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will permanently delete the account{' '}
+                  <strong>{name}</strong> and its transaction link. You cannot
+                  undo this action.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel asChild>
+                  <button type="button" onClick={e => e.stopPropagation()}>
+                    Cancel
+                  </button>
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  className="bg-red-600 text-white hover:bg-red-700"
+                  onClick={async (e) => {
+                    e.stopPropagation();
+                    const res = await deleteAccount(id);
+                    if (res.success) {
+                      toast.success('Account deleted successfully');
+                      router.refresh();
+                    } else {
+                      toast.error('Failed to delete account');
+                    }
+                  }}
                 >
-                  <Trash2 className="h-5 w-5 text-red-600" />
-                </button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This will permanently delete the account <strong>{name}</strong>{' '}
-                    and its transaction link. You cannot undo this action.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction
-                    className="bg-red-600 text-white hover:bg-red-700"
-                    onClick={async () => {
-                      const res = await deleteAccount(id);
-                      if (res.success) {
-                        toast.success('Account deleted successfully');
-                        router.refresh();
-                      } else {
-                        toast.error('Failed to delete account');
-                      }
-                    }}
-                  >
-                    Delete
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-            <Switch
-              checked={isDefault}
-              onClick={handleDefaultChange}
-              disabled={updateDefaultLoading}
-              className="data-[state=checked]:bg-blue-500 data-[state=unchecked]:bg-gray-400"
-            />
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">
-            ${parseFloat(balance).toFixed(2)}
-          </div>
-          <p className="text-muted-foreground text-xs">
-            {type.charAt(0) + type.slice(1).toLowerCase()} Account
-          </p>
-        </CardContent>
-        <CardFooter className="text-muted-foreground flex justify-between text-sm">
-          <div className="flex items-center">
-            <ArrowUpRight className="mr-1 h-4 w-4 text-green-500" />
-            Income
-          </div>
-          <div className="flex items-center">
-            <ArrowDownRight className="mr-1 h-4 w-4 text-red-500" />
-            Expense
-          </div>
-        </CardFooter>
-      </Link>
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+          <Switch
+            checked={isDefault}
+            onClick={handleDefaultChange}
+            disabled={updateDefaultLoading}
+            className="data-[state=checked]:bg-blue-500 data-[state=unchecked]:bg-gray-400"
+          />
+        </div>
+      </div>
+      <CardContent>
+        <div className="text-2xl font-bold">
+          £{parseFloat(balance).toFixed(2)}
+        </div>
+        <p className="text-muted-foreground text-xs">
+          {type.charAt(0) + type.slice(1).toLowerCase()} Account
+        </p>
+      </CardContent>
+      <CardFooter className="text-muted-foreground flex justify-between text-sm">
+        <div className="flex items-center">
+          <ArrowUpRight className="mr-1 h-4 w-4 text-green-500" />
+          Income
+        </div>
+        <div className="flex items-center">
+          <ArrowDownRight className="mr-1 h-4 w-4 text-red-500" />
+          Expense
+        </div>
+      </CardFooter>
     </Card>
   );
 }
