@@ -145,11 +145,6 @@ export async function deleteAccount(id) {
 
     if (!user) throw new Error("User not found");
 
-    // Also delete the budget the user might have
-    await db.budget.delete({
-      where: { userId: user.id },
-    });
-
     await db.account.delete({
       where: { id, userId: user.id },
     });
