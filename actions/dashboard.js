@@ -134,6 +134,33 @@ export async function createAccount(data) {
   }
 }
 
+export async function deleteAccount(id) {
+  try {
+    const { userId } = await auth();
+    if (!userId) throw new Error("Unauthorized");
+
+    const user = await db.user.findUnique({
+      where: { clerkUserId: userId },
+    });
+
+    if (!user) throw new Error("User not found");
+
+    // Also delete the budget the user might have
+    await db.budget.delete({
+      where: { userId: user.id },
+    });
+
+    await db.account.delete({
+      where: { id, userId: user.id },
+    });
+
+    revalidatePath("/dashboard");
+    return { success: true };
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
 export async function getDashboardData() {
   const { userId } = await auth();
   if (!userId) throw new Error("Unauthorized");
