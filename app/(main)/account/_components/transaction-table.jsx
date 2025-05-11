@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
+import * as LucideIcons from "lucide-react";
 
 import {
   Table,
@@ -49,7 +50,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { categoryColors } from "@/data/categories";
+import { categoryColors, defaultCategories } from "@/data/categories";
 import { bulkDeleteTransactions } from "@/actions/account";
 import useFetch from "@/hooks/use-fetch";
 import { BarLoader } from "react-spinners";
@@ -366,8 +367,16 @@ export function TransactionTable({ transactions }) {
                       style={{
                         background: categoryColors[transaction.category],
                       }}
-                      className="px-2 py-1 rounded text-white text-sm"
+                      className="px-2 py-1 rounded text-white text-sm flex items-center gap-1"
                     >
+                      {(() => {
+                        const cat = defaultCategories.find(c => c.id === transaction.category);
+                        if (cat && LucideIcons[cat.icon]) {
+                          const Icon = LucideIcons[cat.icon];
+                          return <Icon className="h-4 w-4 mr-1" />;
+                        }
+                        return null;
+                      })()}
                       {transaction.category}
                     </span>
                   </TableCell>
